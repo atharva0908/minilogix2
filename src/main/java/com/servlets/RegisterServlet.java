@@ -1,6 +1,5 @@
 package com.servlets;
 
-//chage 1
 import java.sql.*;
 import java.io.IOException;
 import java.sql.Connection;

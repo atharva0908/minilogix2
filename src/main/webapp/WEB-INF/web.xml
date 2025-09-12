@@ -1,25 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee" 
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
-         https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0">
 
   <display-name>MiniLogix</display-name>
 
-  <!-- RegisterServlet Configuration -->
+  <!-- Register Servlet -->
   <servlet>
     <servlet-name>RegisterServlet</servlet-name>
     <servlet-class>com.servlets.RegisterServlet</servlet-class>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>RegisterServlet</servlet-name>
     <url-pattern>/RegisterServlet</url-pattern>
   </servlet-mapping>
 
-  <!-- Welcome file if needed -->
+  <!-- Login Servlet -->
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>com.servlets.LoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/LoginServlet</url-pattern>
+  </servlet-mapping>
+
+  <!-- Book Shipment Servlet -->
+  <servlet>
+    <servlet-name>BookShipmentServlet</servlet-name>
+    <servlet-class>com.servlets.BookShipmentServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BookShipmentServlet</servlet-name>
+    <url-pattern>/BookShipmentServlet</url-pattern>
+  </servlet-mapping>
+
+  <!-- Session Timeout -->
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+
+  <!-- Welcome File -->
   <welcome-file-list>
-    <welcome-file>register.jsp</welcome-file>
+    <welcome-file>login.jsp</welcome-file>
   </welcome-file-list>
+
 </web-app>

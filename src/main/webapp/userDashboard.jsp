@@ -11,7 +11,7 @@
     try{
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection con = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/miniLogix","root","yourPassword");
+            "jdbc:mysql://localhost:3306/newminilogix2","root","Gogo@2003");
         PreparedStatement ps = con.prepareStatement(
             "SELECT first_name,last_name,contact FROM users WHERE email=?");
         ps.setString(1,email);
