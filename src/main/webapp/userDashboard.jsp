@@ -1,4 +1,7 @@
 <%@ page import="java.sql.*,jakarta.servlet.http.*,jakarta.servlet.*" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+
 <%
     HttpSession sessionUser = request.getSession(false);
     if(sessionUser == null || sessionUser.getAttribute("email")==null){
@@ -40,6 +43,7 @@
     background:#fff; padding:15px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.2);}
 .form-section{margin-top:20px;}
 .hidden {display:none;}
+.rate-display{margin-top:5px;font-weight:bold;color:#007bff;}
 </style>
 </head>
 <body>
@@ -75,12 +79,25 @@
                     <label>Drop Location:</label>
                     <input type="text" name="drop"><br>
                     <label>Consignment Quantity:</label>
-                    <input type="number" name="quantity" min="1"><br>
+                    <input type="number" name="quantity" min="1" class="qtyAir"><br>
                     <label>Weight (kg):</label>
-                    <input type="number" name="weight" min="1"><br>
-                    <button type="button" onclick="fetchFlights()">Show Available Flights</button>
-                    <select name="flightId" id="flightSelect"></select><br>
-                    <div id="vehicleOptions" class="hidden">
+                    <input type="number" name="weight" min="1" class="wtAir"><br>
+
+                    <!-- ✅ Dynamic Flight List -->
+                    <label for="flightSelect">Select Flight</label>
+                    <select id="flightSelect" name="transportId" required>
+                      <c:forEach var="t" items="${flightList}">
+                        <option value="${t.id}">
+                          ${t.name} | ${t.source} ➡ ${t.destination}
+                          (Dep: ${t.departure}, Arr: ${t.arrival})
+                        </option>
+                      </c:forEach>
+                      <c:if test="${empty flightList}">
+                        <option value="">No flights available</option>
+                      </c:if>
+                    </select><br>
+
+                    <div id="vehicleOptionsAir">
                         <p>Select Final Delivery Vehicle:</p>
                         <select name="vehicle">
                             <option value="2wheeler">Two Wheeler</option>
@@ -89,6 +106,11 @@
                             <option value="6wheeler">Six Wheeler</option>
                         </select>
                     </div>
+
+                    <!-- ✅ Hidden rate + display -->
+                    <input type="hidden" name="rate" id="rateAir">
+                    <div class="rate-display" id="rateDisplayAir">Estimated Rate: ₹0.00</div>
+
                     <button type="submit">Book Air Shipment</button>
                 </form>
             </div>
@@ -102,11 +124,24 @@
                     <label>Drop Location:</label>
                     <input type="text" name="drop"><br>
                     <label>Consignment Quantity:</label>
-                    <input type="number" name="quantity" min="1"><br>
+                    <input type="number" name="quantity" min="1" class="qtyLand"><br>
                     <label>Weight (kg):</label>
-                    <input type="number" name="weight" min="1"><br>
-                    <button type="button" onclick="fetchTrains()">Show Available Trains</button>
-                    <select name="trainId" id="trainSelect"></select><br>
+                    <input type="number" name="weight" min="1" class="wtLand"><br>
+
+                    <!-- ✅ Dynamic Train List -->
+                    <label for="trainSelect">Select Train</label>
+                    <select id="trainSelect" name="transportId" required>
+                      <c:forEach var="t" items="${trainList}">
+                        <option value="${t.id}">
+                          ${t.name} | ${t.source} ➡ ${t.destination}
+                          (Dep: ${t.departure}, Arr: ${t.arrival})
+                        </option>
+                      </c:forEach>
+                      <c:if test="${empty trainList}">
+                        <option value="">No trains available</option>
+                      </c:if>
+                    </select><br>
+
                     <p>Select Delivery Vehicle:</p>
                     <select name="vehicle">
                         <option value="2wheeler">Two Wheeler</option>
@@ -114,6 +149,11 @@
                         <option value="4wheeler">Four Wheeler</option>
                         <option value="6wheeler">Six Wheeler</option>
                     </select>
+
+                    <!-- ✅ Hidden rate + display -->
+                    <input type="hidden" name="rate" id="rateLand">
+                    <div class="rate-display" id="rateDisplayLand">Estimated Rate: ₹0.00</div>
+
                     <button type="submit">Book Land Shipment</button>
                 </form>
             </div>
@@ -129,14 +169,44 @@
             </form>
         </div>
 
+        <!-- Invoice Generation -->
+        <form action="InvoiceServlet" method="post">
+            <input type="hidden" name="userEmail" value="${sessionScope.email}">
+            <button type="submit">Generate Invoice</button>
+        </form>
+
         <!-- Order History -->
         <div id="history" class="form-section hidden">
             <h3>Your Order History</h3>
-            <div id="historyList">
-                <!-- Fill via servlet -->
-            </div>
+            <div id="historyList"><!-- Filled via servlet --></div>
         </div>
     </div>
 </div>
+
+<!-- ✅ JavaScript to auto-calc rate -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function setupRate(qSelector, wSelector, rateId, displayId) {
+    const qty = document.querySelector(qSelector);
+    const wt = document.querySelector(wSelector);
+    const rateInput = document.getElementById(rateId);
+    const display = document.getElementById(displayId);
+
+    function update() {
+      const q = parseFloat(qty.value) || 0;
+      const w = parseFloat(wt.value) || 0;
+      const rate = (w * 50) + (q * 100);
+      rateInput.value = rate.toFixed(2);
+      display.textContent = 'Estimated Rate: ₹' + rate.toFixed(2);
+    }
+
+    qty.addEventListener('input', update);
+    wt.addEventListener('input', update);
+  }
+
+  setupRate('.qtyAir', '.wtAir', 'rateAir', 'rateDisplayAir');
+  setupRate('.qtyLand', '.wtLand', 'rateLand', 'rateDisplayLand');
+});
+</script>
 </body>
 </html>

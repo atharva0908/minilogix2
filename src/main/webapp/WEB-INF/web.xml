@@ -46,5 +46,29 @@
   <welcome-file-list>
     <welcome-file>login.jsp</welcome-file>
   </welcome-file-list>
+  
+ <!-- InvoiceServlet -->
+ <servlet>
+    <servlet-name>InvoiceServlet</servlet-name>
+    <servlet-class>com.servlets.InvoiceServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>InvoiceServlet</servlet-name>
+    <url-pattern>/InvoiceServlet</url-pattern>
+</servlet-mapping>
+
+<!-- TransportListServlet -->
+<servlet>
+    <servlet-name>TransportListServlet</servlet-name>
+    <servlet-class>com.servlets.TransportListServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>TransportListServlet</servlet-name>
+    <url-pattern>/TransportListServlet</url-pattern>
+</servlet-mapping>
+
+ 
 
 </web-app>

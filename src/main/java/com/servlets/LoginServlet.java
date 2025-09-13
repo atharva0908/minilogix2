@@ -46,7 +46,9 @@ public class LoginServlet extends HttpServlet {
         if (isValidUser) {
             HttpSession session = request.getSession();
             session.setAttribute("email", email); // store user email for later use
-            response.sendRedirect("userDashboard.jsp");
+
+            // ✅ Redirect to TransportListServlet to fetch and forward transport options
+            response.sendRedirect("TransportListServlet");
         } else {
             response.sendRedirect("login.jsp?error=invalid");
         }
